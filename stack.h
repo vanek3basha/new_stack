@@ -17,7 +17,8 @@
         STACK_NULL_ERROR,
         STACK_TYPE_ERROR,
         POP_FROM_SIZE_ZERO_STACK_ERROR,
-        NEW_STACK_IS_NULL_ERROR
+        NEW_STACK_IS_NULL_ERROR,
+        REALLOC_STACK_ERROR
     } StackError;
 
     typedef union
@@ -39,10 +40,12 @@
     };
 
     stack_t* stack_init(size_t capacity, StackType type);
-    size_t int_stack_push(stack_t* stack, int value);
-    size_t double_stack_push(stack_t* stack, double value);
+    StackError int_stack_push(stack_t* stack, int value);
+    StackError double_stack_push(stack_t* stack, double value);
     int int_stack_pop(stack_t* stack);
     double double_stack_pop(stack_t* stack);
-    stack_t* stack_realloc(stack_t* stack, size_t new_capacity);
+    StackError stack_realloc(stack_t* stack, size_t new_capacity);
+    StackError stack_free(stack_t* stack);
+    template <typename T> StackError stack_push(stack_t* stack, T value);
 
     #endif

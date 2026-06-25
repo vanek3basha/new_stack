@@ -94,7 +94,6 @@ StackError double_stack_push(stack_t* stack, double value)
 
 }
 
-// 
 template <typename T>
 StackError stack_push(stack_t* stack, T value) {
     if (stack == NULL) {
@@ -102,8 +101,6 @@ StackError stack_push(stack_t* stack, T value) {
     }
 
     if (stack->type == STACK_TYPE_INT) {
-        // static_cast не вызывает варнинг useless-cast, если типы совпали,
-        // но безопасно преобразует типы, если они отличаются
         return int_stack_push(stack, static_cast<int>(value));
     } 
     else if (stack->type == STACK_TYPE_DOUBLE) {

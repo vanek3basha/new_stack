@@ -46,6 +46,6 @@
     double double_stack_pop(stack_t* stack);
     StackError stack_realloc(stack_t* stack, size_t new_capacity);
     StackError stack_free(stack_t* stack);
-    template <typename T> StackError stack_push(stack_t* stack, T value);
+    
 
     #endif

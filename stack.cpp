@@ -94,8 +94,8 @@ StackError double_stack_push(stack_t* stack, double value)
 
 }
 
-template <typename T>
-StackError stack_push(stack_t* stack, T value) {
+template <typename T> StackError stack_push(stack_t* stack, T value) 
+{
     if (stack == NULL) {
         return STACK_NULL_ERROR;
     }

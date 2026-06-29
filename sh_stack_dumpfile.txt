@@ -1,0 +1,188 @@
+---------------------------STACK DUMP---------------------------
+IN FILE:sh_stack.hpp   
+LINE:277   
+FUNC:stk_T sh_stack_pop(shablon_stack_t<stk_T>*, int, const char*, const char*) [with stk_T = int] 
+^
+|
+IN FILE:shablon_stack.cpp   
+LINE:17   
+FUNC:int main() 
+^
+|
+
+----------------------------------------------------------------
+                      TYPE OF STACK: int
+
+----------------------------------------------------------------
+              ADDRESS OF SH_STACK STRUCT: 0x4e21080
+           ADDRESS OF SH_STACK_MASSIVE STRUCT: 0x4e21100
+
+----------------------------------------------------------------
+LEFT  STRUCT CANAREYKA: 1488
+RIGHT STRUCT CANAREYKA: 322
+                        SIZE OF STACK: 1
+                      CAPACITY OF STACK: 10
+
+------------------------ELEMENTS OF STACK-----------------------
+1 ELEMENT: B3 5D AF 5C 
+2 ELEMENT: 01 00 00 00 
+3 ELEMENT: 02 00 00 00 
+4 ELEMENT: 57 B9 B5 69 
+5 ELEMENT: 57 B9 B5 69 
+6 ELEMENT: 57 B9 B5 69 
+7 ELEMENT: 57 B9 B5 69 
+8 ELEMENT: 57 B9 B5 69 
+9 ELEMENT: 57 B9 B5 69 
+10 ELEMENT: 57 B9 B5 69 
+11 ELEMENT: 57 B9 B5 69 
+12 ELEMENT: B3 5D AB 5C 
+
+----------------------------------------------------------------
+                        COUNT OF ERRORS: 0
+
+--------------------------LIST OF ERROR-------------------------
+NOT_ERRORS
+
+----------------------------------------------------------------
+-------------------------STACK DUMP END-------------------------
+---------------------------STACK DUMP---------------------------
+IN FILE:sh_stack.hpp   
+LINE:277   
+FUNC:stk_T sh_stack_pop(shablon_stack_t<stk_T>*, int, const char*, const char*) [with stk_T = int] 
+^
+|
+IN FILE:shablon_stack.cpp   
+LINE:18   
+FUNC:int main() 
+^
+|
+
+----------------------------------------------------------------
+                      TYPE OF STACK: int
+
+----------------------------------------------------------------
+              ADDRESS OF SH_STACK STRUCT: 0x4e21080
+           ADDRESS OF SH_STACK_MASSIVE STRUCT: 0x4e21100
+
+----------------------------------------------------------------
+LEFT  STRUCT CANAREYKA: 1488
+RIGHT STRUCT CANAREYKA: 322
+                        SIZE OF STACK: 0
+                      CAPACITY OF STACK: 10
+
+------------------------ELEMENTS OF STACK-----------------------
+1 ELEMENT: B3 5D AF 5C 
+2 ELEMENT: 01 00 00 00 
+3 ELEMENT: 57 B9 B5 69 
+4 ELEMENT: 57 B9 B5 69 
+5 ELEMENT: 57 B9 B5 69 
+6 ELEMENT: 57 B9 B5 69 
+7 ELEMENT: 57 B9 B5 69 
+8 ELEMENT: 57 B9 B5 69 
+9 ELEMENT: 57 B9 B5 69 
+10 ELEMENT: 57 B9 B5 69 
+11 ELEMENT: 57 B9 B5 69 
+12 ELEMENT: B3 5D AB 5C 
+
+----------------------------------------------------------------
+                        COUNT OF ERRORS: 0
+
+--------------------------LIST OF ERROR-------------------------
+NOT_ERRORS
+
+----------------------------------------------------------------
+-------------------------STACK DUMP END-------------------------
+---------------------------STACK DUMP---------------------------
+IN FILE:sh_stack.hpp   
+LINE:276   
+FUNC:stk_T sh_stack_pop(shablon_stack_t<stk_T>*, int, const char*, const char*) [with stk_T = int] 
+^
+|
+IN FILE:shablon_stack.cpp   
+LINE:17   
+FUNC:int main() 
+^
+|
+
+----------------------------------------------------------------
+                      TYPE OF STACK: int
+
+----------------------------------------------------------------
+              ADDRESS OF SH_STACK STRUCT: 0x4e21080
+           ADDRESS OF SH_STACK_MASSIVE STRUCT: 0x4e21100
+
+----------------------------------------------------------------
+LEFT  STRUCT CANAREYKA: 1488
+RIGHT STRUCT CANAREYKA: 322
+                        SIZE OF STACK: 1
+                      CAPACITY OF STACK: 10
+
+------------------------ELEMENTS OF STACK-----------------------
+1 ELEMENT: B3 5D AF 5C 
+2 ELEMENT: 01 00 00 00 
+3 ELEMENT: 02 00 00 00 
+4 ELEMENT: 57 B9 B5 69 
+5 ELEMENT: 57 B9 B5 69 
+6 ELEMENT: 57 B9 B5 69 
+7 ELEMENT: 57 B9 B5 69 
+8 ELEMENT: 57 B9 B5 69 
+9 ELEMENT: 57 B9 B5 69 
+10 ELEMENT: 57 B9 B5 69 
+11 ELEMENT: 57 B9 B5 69 
+12 ELEMENT: B3 5D AB 5C 
+
+----------------------------------------------------------------
+                        COUNT OF ERRORS: 0
+
+--------------------------LIST OF ERROR-------------------------
+NOT_ERRORS
+
+----------------------------------------------------------------
+-------------------------STACK DUMP END-------------------------
+---------------------------STACK DUMP---------------------------
+IN FILE:sh_stack.hpp   
+LINE:276   
+FUNC:stk_T sh_stack_pop(shablon_stack_t<stk_T>*, int, const char*, const char*) [with stk_T = int] 
+^
+|
+IN FILE:shablon_stack.cpp   
+LINE:18   
+FUNC:int main() 
+^
+|
+
+----------------------------------------------------------------
+                      TYPE OF STACK: int
+
+----------------------------------------------------------------
+              ADDRESS OF SH_STACK STRUCT: 0x4e21080
+           ADDRESS OF SH_STACK_MASSIVE STRUCT: 0x4e21100
+
+----------------------------------------------------------------
+LEFT  STRUCT CANAREYKA: 1488
+RIGHT STRUCT CANAREYKA: 322
+                        SIZE OF STACK: 0
+                      CAPACITY OF STACK: 10
+
+------------------------ELEMENTS OF STACK-----------------------
+1 ELEMENT: B3 5D AF 5C 
+2 ELEMENT: 01 00 00 00 
+3 ELEMENT: 57 B9 B5 69 
+4 ELEMENT: 57 B9 B5 69 
+5 ELEMENT: 57 B9 B5 69 
+6 ELEMENT: 57 B9 B5 69 
+7 ELEMENT: 57 B9 B5 69 
+8 ELEMENT: 57 B9 B5 69 
+9 ELEMENT: 57 B9 B5 69 
+10 ELEMENT: 57 B9 B5 69 
+11 ELEMENT: 57 B9 B5 69 
+12 ELEMENT: B3 5D AB 5C 
+
+----------------------------------------------------------------
+                        COUNT OF ERRORS: 0
+
+--------------------------LIST OF ERROR-------------------------
+NOT_ERRORS
+
+----------------------------------------------------------------
+-------------------------STACK DUMP END-------------------------

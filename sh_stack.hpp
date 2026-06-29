@@ -8,11 +8,20 @@
 template <typename stk_T> 
 struct shablon_stack_t
 {
-    size_t left_struct_canar;
-    stk_T* sh_stack_massive;
-    size_t capacity_of_sh_stack;
-    size_t size_of_sh_stack;
-    size_t right_struct_canar;
+    size_t   left_struct_canar;
+    stk_T*   sh_stack_massive;
+    size_t   capacity_of_sh_stack;
+    size_t   size_of_sh_stack;
+    size_t   right_struct_canar;
+    uint64_t sh_stack_hash;
+    uint64_t sh_struct_hash;
+};
+
+struct StackHistoryCalls
+{
+    int line;
+    const char* file;
+    const char* func;
 };
 
 #define LEFT_CANAREYKA     0b0101110010101111010111011011001101011100101011110101110110110011
@@ -20,6 +29,7 @@ struct shablon_stack_t
 #define POISON             0b0101110011001011001010110101101101101001101101011011100101010111
 #define LEFT_STRUCT_CANAR  1488
 #define RIGHT_STRUCT_CANAR 322
+
 typedef enum
 {
     NOT_ERROR,
@@ -33,6 +43,7 @@ typedef enum
     POISON_ERROR,
     LEFT_STRUCT_CANAR_ERROR,
     RIGHT_STRUCT_CANAR_ERROR,
+    HASH_CHANGE_ERROR,
     DUMP_FILE_OPEN_ERROR
 } ShStackError;
 
@@ -52,21 +63,25 @@ static const char* ShStackErrorNames[] =
     "DUMP_FILE_OPEN_ERROR"
 };
 
+#define MAX_CALLS_IN_HISTORY 127
+static StackHistoryCalls call_history[MAX_CALLS_IN_HISTORY] = {};
+static size_t level_in_history = 0 ;
 
 template <typename stk_T> 
-shablon_stack_t<stk_T>* sh_stack_init(size_t capacity);
+shablon_stack_t<stk_T>* sh_stack_init(size_t capacity, int line, const char* file, const char* func);
 
 template <typename stk_T> 
-ShStackError sh_stack_free(shablon_stack_t<stk_T>* sh_stack);
+ShStackError sh_stack_free(shablon_stack_t<stk_T>* sh_stack, int line, const char* file, const char* func);
 
 template <typename stk_T> 
-ShStackError sh_stack_push(stk_T value, shablon_stack_t<stk_T>* sh_stack);
+ShStackError sh_stack_push(stk_T value, shablon_stack_t<stk_T>* sh_stack, int line, const char* file, const char* func);
 
 template <typename stk_T>
-stk_T sh_stack_pop(shablon_stack_t<stk_T>* sh_stack);
+stk_T sh_stack_pop(shablon_stack_t<stk_T>* sh_stack, int line, const char* file, const char* func);
 
 template <typename stk_T>
-shablon_stack_t<stk_T>* sh_stack_realloc(shablon_stack_t<stk_T>* sh_stack, size_t new_capacity);
+shablon_stack_t<stk_T>* sh_stack_realloc(shablon_stack_t<stk_T>* sh_stack, size_t new_capacity, \
+    int line, const char* file, const char* func);
 
 template <typename stk_T>
 ShStackError left_canareyka_create(stk_T* left_element, size_t size_of_canareyka);
@@ -77,8 +92,14 @@ ShStackError right_canareyka_create(stk_T* right_element, size_t size_of_canarey
 template <typename stk_T>
 ShStackError poison_create(shablon_stack_t<stk_T>* sh_stack, size_t size_of_poison);
 
+template <typename stk_T> 
+ShStackError hash_counting(shablon_stack_t<stk_T>* sh_stack);
+
 template <typename stk_T>
-ShStackError sh_stack_check(shablon_stack_t<stk_T>* sh_stack);
+size_t get_bytes_sum(const stk_T* value);
+
+template <typename stk_T>
+ShStackError sh_stack_check(shablon_stack_t<stk_T>* sh_stack, int line, const char* file, const char* func);
 
 template <typename stk_T>
 ShStackError check_left_canareyka(shablon_stack_t<stk_T>* sh_stack);
@@ -87,19 +108,32 @@ template <typename stk_T>
 ShStackError check_right_canareyka(shablon_stack_t<stk_T>* sh_stack);
 
 template <typename stk_T>
-ShStackError check_poison(shablon_stack_t<stk_T>* sh_stack);
+ShStackError check_poison(shablon_stack_t<stk_T>* sh_stack, int line);
 
 template <typename stk_T>
-ShStackError sh_stack_dump(ShStackError* massive_of_error, shablon_stack_t<stk_T>* sh_stack, size_t count_of_errors);
+ShStackError sh_stack_dump(ShStackError* massive_of_error, shablon_stack_t<stk_T>* sh_stack, size_t count_of_errors, int line, const char* file, const char* func);
 
-
+#define SH_STACK_INIT(type, capacity)               sh_stack_init<type>(capacity, __LINE__, __FILE__, __PRETTY_FUNCTION__)
+#define SH_STACK_FREE(stack)                        sh_stack_free(stack, __LINE__, __FILE__, __PRETTY_FUNCTION__)
+#define SH_STACK_PUSH(value, stack)                 sh_stack_push(value, stack, __LINE__, __FILE__, __PRETTY_FUNCTION__)
+#define SH_STACK_POP(stack)                        sh_stack_pop(stack, __LINE__, __FILE__, __PRETTY_FUNCTION__)
+#define SH_STACK_REALLOC(stack, new_capacity)       sh_stack_realloc(stack, new_capacity, __LINE__, __FILE__, __PRETTY_FUNCTION__)
+#define SH_STACK_CHECK(stack)                       sh_stack_check(stack, __LINE__, __FILE__, __PRETTY_FUNCTION__)
+#define SH_STACK_DUMP(massive, stack, count)        sh_stack_dump(massive, stack, count, __LINE__, __FILE__, __PRETTY_FUNCTION__)
 
 template <typename stk_T> 
-shablon_stack_t<stk_T>* sh_stack_init(size_t capacity)
+shablon_stack_t<stk_T>* sh_stack_init(size_t capacity, int line, const char* file, const char* func)
 {
+    if(level_in_history < MAX_CALLS_IN_HISTORY)
+    {
+        call_history[level_in_history] = {line, file, func};
+        level_in_history += 1;
+    }
+
     if(capacity > 1000)
     {
         perror("INPUT CAPACITY < 0 OR > 1000\n");
+        level_in_history -= 1;
         return NULL;
     }
 
@@ -107,6 +141,7 @@ shablon_stack_t<stk_T>* sh_stack_init(size_t capacity)
     if(sh_stack == NULL)
     {
         perror("SH_STACK == NULL\n");
+        level_in_history -= 1;
         return NULL;
     }
     
@@ -119,6 +154,7 @@ shablon_stack_t<stk_T>* sh_stack_init(size_t capacity)
     {
         perror("SH_STACK_MASSIVE ERROR\n");
         free(sh_stack);
+        level_in_history -= 1;
         return NULL;
     }
     
@@ -129,20 +165,30 @@ shablon_stack_t<stk_T>* sh_stack_init(size_t capacity)
     sh_stack->left_struct_canar = LEFT_STRUCT_CANAR;
     sh_stack->right_struct_canar = RIGHT_STRUCT_CANAR;
 
-    if(sh_stack_check(sh_stack) == NOT_ERROR)
+    hash_counting(sh_stack);
+
+    if(SH_STACK_CHECK(sh_stack) == NOT_ERROR)
     {
+        level_in_history -= 1;
         return sh_stack;
     } 
     else
     {
+        level_in_history -= 1;
         return NULL;
     }
 }
 
 template <typename stk_T> 
-ShStackError sh_stack_free(shablon_stack_t<stk_T>* sh_stack)
+ShStackError sh_stack_free(shablon_stack_t<stk_T>* sh_stack, int line, const char* file, const char* func)
 {
-    ShStackError flag = sh_stack_check(sh_stack);
+    if(level_in_history < MAX_CALLS_IN_HISTORY)
+    {
+        call_history[level_in_history] = {line, file, func};
+        level_in_history += 1;
+    }
+
+    ShStackError flag = SH_STACK_CHECK(sh_stack);
     if(sh_stack != NULL)
     {
     free(sh_stack->sh_stack_massive);
@@ -150,82 +196,114 @@ ShStackError sh_stack_free(shablon_stack_t<stk_T>* sh_stack)
     sh_stack->size_of_sh_stack = 0;
     sh_stack->left_struct_canar = 0;
     sh_stack->right_struct_canar = 0;
+    sh_stack->sh_stack_hash = 0;
+    sh_stack->sh_struct_hash = 0;
     }
     free(sh_stack);
+    level_in_history -= 1;
     return flag;
 }
 
 template <typename stk_T> 
-ShStackError sh_stack_push(stk_T value, shablon_stack_t<stk_T>* sh_stack)
+ShStackError sh_stack_push(stk_T value, shablon_stack_t<stk_T>* sh_stack, int line, const char* file, const char* func)
 {
-    ShStackError flag = sh_stack_check(sh_stack);
+    if(level_in_history < MAX_CALLS_IN_HISTORY)
+    {
+        call_history[level_in_history] = {line, file, func};
+        level_in_history += 1;
+    }
+
+    ShStackError flag = SH_STACK_CHECK(sh_stack);
     if(flag != NOT_ERROR)
     {
+        level_in_history -= 1;
         return flag;
     }
 
     if(sh_stack->size_of_sh_stack + 1 >= sh_stack->capacity_of_sh_stack)
     {
-        sh_stack_realloc(sh_stack, sh_stack->capacity_of_sh_stack * 2 + 1);
+        SH_STACK_REALLOC(sh_stack, sh_stack->capacity_of_sh_stack * 2 + 1);
         if(sh_stack == NULL)
         {
             perror("SH_STACK == NULL\n");
+            level_in_history -= 1;
             return SH_STACK_NULL_ERROR;
         }
     }
 
     sh_stack->sh_stack_massive[sh_stack->size_of_sh_stack + 1] = value;
     sh_stack->size_of_sh_stack += 1;
-
-    flag = sh_stack_check(sh_stack);
+    hash_counting(sh_stack);
+    flag = SH_STACK_CHECK(sh_stack);
 
     if(flag != NOT_ERROR)
     {
+        level_in_history -= 1;
         return flag;
     }
     else
     {
+        level_in_history -=1;
         return NOT_ERROR;
     }
 }
 
 template <typename stk_T>
-stk_T sh_stack_pop(shablon_stack_t<stk_T>* sh_stack)
+stk_T sh_stack_pop(shablon_stack_t<stk_T>* sh_stack, int line, const char* file, const char* func)
 {
-    ShStackError flag = sh_stack_check(sh_stack);
+    if(level_in_history < MAX_CALLS_IN_HISTORY)
+    {
+        call_history[level_in_history] = {line, file, func};
+        level_in_history += 1;
+    }
+
+    ShStackError flag = SH_STACK_CHECK(sh_stack);
     if(flag != NOT_ERROR)
     {
+        level_in_history -= 1;
         return stk_T();
     }
 
     if(sh_stack->size_of_sh_stack == 0)
     {
         perror("SIZE OF STACK == 0, POP ELEMENT IS NULL\n");
+        level_in_history -= 1;
         return stk_T();
     }
-
     stk_T element =  sh_stack->sh_stack_massive[sh_stack->size_of_sh_stack];
     sh_stack->size_of_sh_stack -= 1;
+    right_canareyka_create(sh_stack->sh_stack_massive + sh_stack->capacity_of_sh_stack + 1, sizeof(stk_T));
+    SH_STACK_DUMP(NULL, sh_stack, 0);
     poison_create(sh_stack, sizeof(stk_T));
-    flag = sh_stack_check(sh_stack);
+    hash_counting(sh_stack);
+    flag = SH_STACK_CHECK(sh_stack);
 
     if(flag != NOT_ERROR)
     {
+        level_in_history -= 1;
         return stk_T();
     }
     else
     {
+        level_in_history -=1;
         return element;
     }
 
 }
 
 template <typename stk_T>
-shablon_stack_t<stk_T>* sh_stack_realloc(shablon_stack_t<stk_T>* sh_stack, size_t new_capacity)
+shablon_stack_t<stk_T>* sh_stack_realloc(shablon_stack_t<stk_T>* sh_stack, size_t new_capacity, int line, const char* file, const char* func)
 {
-    ShStackError flag = sh_stack_check(sh_stack);
+    if(level_in_history < MAX_CALLS_IN_HISTORY)
+    {
+        call_history[level_in_history] = {line, file, func};
+        level_in_history += 1;
+    }
+
+    ShStackError flag = SH_STACK_CHECK(sh_stack);
     if(flag != NOT_ERROR)
     {
+        level_in_history -= 1;
         return NULL;
     }
 
@@ -233,20 +311,24 @@ shablon_stack_t<stk_T>* sh_stack_realloc(shablon_stack_t<stk_T>* sh_stack, size_
     if(sh_stack->sh_stack_massive == NULL)
     {
         perror("SH_STACK_MASSIVE == NULL\n");
+        level_in_history -= 1;
         return NULL;
     }
+
     sh_stack->sh_stack_massive[sh_stack->capacity_of_sh_stack + 1] = 0;
     sh_stack->capacity_of_sh_stack = new_capacity;
     right_canareyka_create(sh_stack->sh_stack_massive + new_capacity + 1, sizeof(stk_T)); 
     poison_create(sh_stack, sizeof(stk_T));
-
-    flag = sh_stack_check(sh_stack);
+    hash_counting(sh_stack);
+    flag = SH_STACK_CHECK(sh_stack);
     if(flag != NOT_ERROR)
     {
+        level_in_history -= 1;
         return NULL;
     }
     else
     {
+        level_in_history -= 1;
         return sh_stack;
     }
 }
@@ -297,18 +379,59 @@ ShStackError poison_create(shablon_stack_t<stk_T>* sh_stack, size_t size_of_pois
 
     for(size_t i = sh_stack->size_of_sh_stack; i < sh_stack->capacity_of_sh_stack; i++)
     {
-        printf("here -> poison\n");
         memcpy(sh_stack->sh_stack_massive + i + 1, ptr_of_poison, size_of_poison);
     }
 
     return NOT_ERROR;
 }
 
+template <typename stk_T> 
+ShStackError hash_counting(shablon_stack_t<stk_T>* sh_stack)
+{
+    uint64_t hash_for_massive = 0;
+    uint64_t hash_for_struct = 0;
+    for(size_t i = 0; i <= sh_stack->capacity_of_sh_stack; i++)
+    {
+        hash_for_massive += get_bytes_sum(sh_stack->sh_stack_massive + i);
+        hash_for_struct += get_bytes_sum(sh_stack->sh_stack_massive + i);
+    }
+    hash_for_struct += get_bytes_sum(&sh_stack->capacity_of_sh_stack);
+    hash_for_struct += get_bytes_sum(&sh_stack->size_of_sh_stack);
+    hash_for_struct += get_bytes_sum(&sh_stack->left_struct_canar);
+    hash_for_struct += get_bytes_sum(&sh_stack->right_struct_canar);
+
+    sh_stack->sh_stack_hash = hash_for_massive;
+    sh_stack->sh_struct_hash = hash_for_struct;
+    // printf("stack hash: %ld\n", sh_stack->sh_stack_hash);
+    // printf("struct hash: %ld\n", sh_stack->sh_struct_hash);
+    return NOT_ERROR;
+}
+
+template <typename stk_T>
+uint64_t get_bytes_sum(const stk_T* value) 
+{
+    const uint8_t* byte_ptr = (const uint8_t*)(value);
+    size_t sum = 0;
+
+    for (size_t i = 0; i < sizeof(stk_T); ++i) 
+    {
+        sum += byte_ptr[i];
+    }
+
+    return sum;
+}
+
 /**********************************************************************************************/
 
 template <typename stk_T>
-ShStackError sh_stack_check(shablon_stack_t<stk_T>* sh_stack)
+ShStackError sh_stack_check(shablon_stack_t<stk_T>* sh_stack, int line, const char* file, const char* func)
 {
+    if(level_in_history < MAX_CALLS_IN_HISTORY)
+    {
+        call_history[level_in_history] = {line, file, func};
+        level_in_history += 1;
+    }
+
     ShStackError massive_of_errors[20] = {};
     size_t count_of_errors = 0;
 
@@ -317,7 +440,8 @@ ShStackError sh_stack_check(shablon_stack_t<stk_T>* sh_stack)
         perror("SH_STACK == NULL\n");
         massive_of_errors[count_of_errors] = SH_STACK_NULL_ERROR;
         count_of_errors += 1;
-        sh_stack_dump<stk_T>(massive_of_errors, sh_stack, count_of_errors);
+        SH_STACK_DUMP(massive_of_errors, sh_stack, count_of_errors);
+        level_in_history -= 1;
         return SH_STACK_NULL_ERROR;
     }
 
@@ -363,6 +487,16 @@ ShStackError sh_stack_check(shablon_stack_t<stk_T>* sh_stack)
         count_of_errors += 1;
     }
 
+    uint64_t temp_hash = sh_stack->sh_stack_hash;
+    uint64_t temp_struct_hash = sh_stack->sh_struct_hash;
+    hash_counting(sh_stack);
+    if(temp_hash != sh_stack->sh_stack_hash || temp_struct_hash != sh_stack->sh_struct_hash)
+    {
+        perror("HASH HAS BEEN CHANGE\n");
+        massive_of_errors[count_of_errors] = HASH_CHANGE_ERROR;
+        count_of_errors += 1;
+    }
+
     if(sh_stack->left_struct_canar != LEFT_STRUCT_CANAR)
     {
         perror("LEFT STRUCT CANAREYKA HAS BEEN CHANGE");
@@ -377,13 +511,16 @@ ShStackError sh_stack_check(shablon_stack_t<stk_T>* sh_stack)
         count_of_errors += 1;
     }
 
+    
     if(count_of_errors == 0)
     {
+        level_in_history -= 1;
         return NOT_ERROR;
     }
     else
     {
-        sh_stack_dump<stk_T>(massive_of_errors ,sh_stack, count_of_errors);
+        SH_STACK_DUMP(massive_of_errors ,sh_stack, count_of_errors);
+        level_in_history -= 1;
         return massive_of_errors[count_of_errors - 1];
     }
 }
@@ -435,12 +572,19 @@ ShStackError check_poison(shablon_stack_t<stk_T>* sh_stack)
 
 
 template <typename stk_T>
-ShStackError sh_stack_dump(ShStackError* massive_of_error, shablon_stack_t<stk_T>* sh_stack, size_t count_of_errors)
+ShStackError sh_stack_dump(ShStackError* massive_of_error, shablon_stack_t<stk_T>* sh_stack, size_t count_of_errors, int line, const char* file, const char* func)
 {
+    if(level_in_history < MAX_CALLS_IN_HISTORY)
+    {
+        call_history[level_in_history] = {line, file, func};
+        level_in_history += 1;
+    }
+
     FILE* dump_file = fopen("sh_stack_dumpfile.txt", "a+");
     if(dump_file == NULL)
     {
         perror("DUMP_FILE OPEN ERROR\n");
+        level_in_history -= 1;
         return DUMP_FILE_OPEN_ERROR;
     }
     ShStackError flag = NOT_ERROR;
@@ -448,8 +592,15 @@ ShStackError sh_stack_dump(ShStackError* massive_of_error, shablon_stack_t<stk_T
     char* type_of_stack = abi::__cxa_demangle(typeid(stk_T).name(), NULL, NULL, NULL);
     fprintf(dump_file, "---------------------------STACK DUMP---------------------------\n");
     
+    for(size_t i = level_in_history; i > 0; i--)
+    {
+        fprintf(dump_file, "IN FILE:%s   \nLINE:%d   \nFUNC:%s \n", call_history[i - 1].file, call_history[i - 1].line, call_history[i - 1].func);
+        fprintf(dump_file, "^\n");
+        fprintf(dump_file, "|\n");
+    }
+
     fprintf(dump_file, "\n----------------------------------------------------------------\n");
-    fprintf(dump_file, "                       TYPE OF STACK: %s\n", type_of_stack);
+    fprintf(dump_file, "                      TYPE OF STACK: %s\n", type_of_stack);
 
     fprintf(dump_file, "\n----------------------------------------------------------------\n");
     fprintf(dump_file, "              ADDRESS OF SH_STACK STRUCT: %p\n", sh_stack);
@@ -459,11 +610,15 @@ ShStackError sh_stack_dump(ShStackError* massive_of_error, shablon_stack_t<stk_T
         fprintf(dump_file, "            SH_STACK IS NULL - FURTHER DUMP ISN'T POSSIBLE\n");
         flag = SH_STACK_NULL_ERROR;        
     }
+
+    
     
     if(flag == NOT_ERROR)
     {
         fprintf(dump_file, "           ADDRESS OF SH_STACK_MASSIVE STRUCT: %p\n", sh_stack->sh_stack_massive);
         fprintf(dump_file, "\n----------------------------------------------------------------\n");
+        fprintf(dump_file, "LEFT  STRUCT CANAREYKA: %lu\n", sh_stack->left_struct_canar);
+        fprintf(dump_file, "RIGHT STRUCT CANAREYKA: %lu\n", sh_stack->right_struct_canar);
         fprintf(dump_file, "                        SIZE OF STACK: %lu\n", sh_stack->size_of_sh_stack);
         fprintf(dump_file, "                      CAPACITY OF STACK: %lu\n", sh_stack->capacity_of_sh_stack);
         
@@ -510,5 +665,6 @@ ShStackError sh_stack_dump(ShStackError* massive_of_error, shablon_stack_t<stk_T
     fprintf(dump_file, "-------------------------STACK DUMP END-------------------------\n");
     fclose(dump_file);
     free(type_of_stack);
+    level_in_history -= 1;
     return SH_STACK_NULL_ERROR;
 }

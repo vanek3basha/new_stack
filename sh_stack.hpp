@@ -273,7 +273,6 @@ stk_T sh_stack_pop(shablon_stack_t<stk_T>* sh_stack, int line, const char* file,
     stk_T element =  sh_stack->sh_stack_massive[sh_stack->size_of_sh_stack];
     sh_stack->size_of_sh_stack -= 1;
     right_canareyka_create(sh_stack->sh_stack_massive + sh_stack->capacity_of_sh_stack + 1, sizeof(stk_T));
-    SH_STACK_DUMP(NULL, sh_stack, 0);
     poison_create(sh_stack, sizeof(stk_T));
     hash_counting(sh_stack);
     flag = SH_STACK_CHECK(sh_stack);

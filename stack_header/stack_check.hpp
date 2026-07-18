@@ -1,13 +1,13 @@
-template <typename stk_T>
-ShStackError sh_stack_check(shablon_stack_t<stk_T>* sh_stack, int line, const char* file, const char* func)
+template <typename elem_stk_T>
+sh_stack_error_t sh_stack_check(shablon_stack_t<elem_stk_T>* sh_stack, int line, const char* file, const char* func)
 {
-    if(level_in_history < MAX_CALLS_IN_HISTORY)
+    if(sh_stack->calls_level < MAX_CALLS_IN_HISTORY)
     {
-        call_history[level_in_history] = {line, file, func};
-        level_in_history += 1;
+        sh_stack->info[sh_stack->calls_level] = {line, file, func};
+        sh_stack->calls_level += 1;
     }
 
-    ShStackError massive_of_errors[20] = {};
+    sh_stack_error_t massive_of_errors[20] = {};
     size_t count_of_errors = 0;
 
     if(sh_stack == NULL)
@@ -16,7 +16,7 @@ ShStackError sh_stack_check(shablon_stack_t<stk_T>* sh_stack, int line, const ch
         massive_of_errors[count_of_errors] = SH_STACK_NULL_ERROR;
         count_of_errors += 1;
         SH_STACK_DUMP(massive_of_errors, sh_stack, count_of_errors);
-        level_in_history -= 1;
+        sh_stack->calls_level -= 1;
         return SH_STACK_NULL_ERROR;
     }
 
@@ -88,23 +88,23 @@ ShStackError sh_stack_check(shablon_stack_t<stk_T>* sh_stack, int line, const ch
     
     if(count_of_errors == 0)
     {
-        level_in_history -= 1;
+        sh_stack->calls_level -= 1;
         return NOT_ERROR;
     }
     else
     {
         SH_STACK_DUMP(massive_of_errors ,sh_stack, count_of_errors);
-        level_in_history -= 1;
+        sh_stack->calls_level -= 1;
         return massive_of_errors[count_of_errors - 1];
     }
 }
 
-template <typename stk_T>
-ShStackError check_left_canareyka(shablon_stack_t<stk_T>* sh_stack)
+template <typename elem_stk_T>
+sh_stack_error_t check_left_canareyka(shablon_stack_t<elem_stk_T>* sh_stack)
 {
     uint64_t left_canareyka = LEFT_CANAREYKA;
     uint64_t* ptr_of_left_canareyka = (uint64_t*)&left_canareyka;
-    if(memcmp(sh_stack->sh_stack_massive, ptr_of_left_canareyka, sizeof(stk_T)) == 0)
+    if(memcmp(sh_stack->sh_stack_massive, ptr_of_left_canareyka, sizeof(elem_stk_T)) == 0)
     {
         return NOT_ERROR;
     }
@@ -114,12 +114,12 @@ ShStackError check_left_canareyka(shablon_stack_t<stk_T>* sh_stack)
     }
 }
 
-template <typename stk_T>
-ShStackError check_right_canareyka(shablon_stack_t<stk_T>* sh_stack)
+template <typename elem_stk_T>
+sh_stack_error_t check_right_canareyka(shablon_stack_t<elem_stk_T>* sh_stack)
 {
     uint64_t right_canareyka = RIGHT_CANAREYKA;
     uint64_t* ptr_of_right_canareyka = (uint64_t*)&right_canareyka;
-    if(memcmp(sh_stack->sh_stack_massive + sh_stack->capacity_of_sh_stack + 1, ptr_of_right_canareyka, sizeof(stk_T)) == 0)
+    if(memcmp(sh_stack->sh_stack_massive + sh_stack->capacity_of_sh_stack + 1, ptr_of_right_canareyka, sizeof(elem_stk_T)) == 0)
     {
         return NOT_ERROR;
     }
@@ -129,14 +129,14 @@ ShStackError check_right_canareyka(shablon_stack_t<stk_T>* sh_stack)
     }
 }
 
-template <typename stk_T>
-ShStackError check_poison(shablon_stack_t<stk_T>* sh_stack)
+template <typename elem_stk_T>
+sh_stack_error_t check_poison(shablon_stack_t<elem_stk_T>* sh_stack)
 {
     uint64_t poison = POISON;
     uint64_t* ptr_of_poison = (uint64_t*)&poison;
     for(size_t i = sh_stack->size_of_sh_stack; i < sh_stack->capacity_of_sh_stack; i++)
     {
-        if(memcmp(sh_stack->sh_stack_massive + i + 1, ptr_of_poison, sizeof(stk_T)) != 0)
+        if(memcmp(sh_stack->sh_stack_massive + i + 1, ptr_of_poison, sizeof(elem_stk_T)) != 0)
         {
             return POISON_ERROR;
         }

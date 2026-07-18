@@ -1,5 +1,5 @@
-template <typename stk_T>
-ShStackError left_canareyka_create(stk_T* left_element, size_t size_of_canareyka)
+template <typename elem_stk_T>
+sh_stack_error_t left_canareyka_create(elem_stk_T* left_element, size_t size_of_canareyka)
 {
     if(size_of_canareyka > 8)
     {
@@ -12,8 +12,8 @@ ShStackError left_canareyka_create(stk_T* left_element, size_t size_of_canareyka
     return NOT_ERROR;
 }
 
-template <typename stk_T>
-ShStackError right_canareyka_create(stk_T* right_element, size_t size_of_canareyka)
+template <typename elem_stk_T>
+sh_stack_error_t right_canareyka_create(elem_stk_T* right_element, size_t size_of_canareyka)
 {
     if(size_of_canareyka > 8)
     {
@@ -26,8 +26,8 @@ ShStackError right_canareyka_create(stk_T* right_element, size_t size_of_canarey
     return NOT_ERROR;
 }
 
-template <typename stk_T>
-ShStackError poison_create(shablon_stack_t<stk_T>* sh_stack, size_t size_of_poison)
+template <typename elem_stk_T>
+sh_stack_error_t poison_create(shablon_stack_t<elem_stk_T>* sh_stack, size_t size_of_poison)
 {   
     if(size_of_poison > 8)
     {
@@ -46,8 +46,8 @@ ShStackError poison_create(shablon_stack_t<stk_T>* sh_stack, size_t size_of_pois
     return NOT_ERROR;
 }
 
-template <typename stk_T> 
-uint64_t massive_hash_counting(shablon_stack_t<stk_T>* sh_stack)
+template <typename elem_stk_T> 
+uint64_t massive_hash_counting(shablon_stack_t<elem_stk_T>* sh_stack)
 {
     uint64_t hash_for_massive = 0;
     for(size_t i = 0; i <= sh_stack->capacity_of_sh_stack; i++)
@@ -60,8 +60,8 @@ uint64_t massive_hash_counting(shablon_stack_t<stk_T>* sh_stack)
 }
 
 
-template <typename stk_T> 
-uint64_t struct_hash_counting(shablon_stack_t<stk_T>* sh_stack)
+template <typename elem_stk_T> 
+uint64_t struct_hash_counting(shablon_stack_t<elem_stk_T>* sh_stack)
 {
     uint64_t hash_for_struct = 0;
     for(size_t i = 0; i <= sh_stack->capacity_of_sh_stack; i++)
@@ -77,13 +77,13 @@ uint64_t struct_hash_counting(shablon_stack_t<stk_T>* sh_stack)
     return hash_for_struct;
 }   
 
-template <typename stk_T>
-uint64_t get_bytes_sum(const stk_T* value) 
+template <typename elem_stk_T>
+uint64_t get_bytes_sum(const elem_stk_T* value) 
 {
     const uint8_t* byte_ptr = (const uint8_t*)(value);
     size_t sum = 0;
 
-    for (size_t i = 0; i < sizeof(stk_T); ++i) 
+    for (size_t i = 0; i < sizeof(elem_stk_T); ++i) 
     {
         sum += byte_ptr[i];
     }

@@ -1,5 +1,8 @@
+#ifndef _SH_STACK_DUMP__HPP_
+#define _SH_STACK_DUMP__HPP_
+
 template <typename elem_stk_T>
-sh_stack_error_t sh_stack_dump(sh_stack_error_t* massive_of_error, shablon_stack_t<elem_stk_T>* sh_stack, size_t count_of_errors, int line, const char* file, const char* func)
+sh_stack_error_t sh_stack_dump(stack_flag_of_err_t byte_flag, shablon_stack_t<elem_stk_T>* sh_stack, int line, const char* file, const char* func)
 {
     if(sh_stack->calls_level < MAX_CALLS_IN_HISTORY)
     {
@@ -72,21 +75,27 @@ sh_stack_error_t sh_stack_dump(sh_stack_error_t* massive_of_error, shablon_stack
         }
     }
 
-    fprintf(dump_file, "\n----------------------------------------------------------------\n");
-    fprintf(dump_file, "                        COUNT OF ERRORS: %lu\n", count_of_errors);
-    
+    size_t count_of_errors = 0;
     fprintf(dump_file, "\n--------------------------LIST OF ERROR-------------------------\n");
-    if(count_of_errors != 0)
+    if(byte_flag != 0)
     {
-        for(size_t i = 0; i < count_of_errors; i++)
+        stack_flag_of_err_t mask = 0;
+        for(size_t i = 1; i < 31; i++)
         {
-            fprintf(dump_file, "ERROR 1: %s\n", ShStackErrorNames[massive_of_error[i]]);
+            mask = 1 << i;
+            if((byte_flag & mask) != 0)
+            {
+            count_of_errors += 1;
+            fprintf(dump_file, "ERROR %lu: %s\n", count_of_errors, NAME_OF_ERROR());
+            }
         }
     }
     else
     {
         fprintf(dump_file, "NOT_ERRORS\n");
     }
+    fprintf(dump_file, "\n----------------------------------------------------------------\n");
+    fprintf(dump_file, "                        COUNT OF ERRORS: %lu\n", count_of_errors);
 
     fprintf(dump_file, "\n----------------------------------------------------------------\n");
     fprintf(dump_file, "-------------------------STACK DUMP END-------------------------\n");
@@ -95,3 +104,5 @@ sh_stack_error_t sh_stack_dump(sh_stack_error_t* massive_of_error, shablon_stack
     sh_stack->calls_level -= 1;
     return SH_STACK_NULL_ERROR;
 }
+
+#endif

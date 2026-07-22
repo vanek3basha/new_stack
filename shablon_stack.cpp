@@ -4,7 +4,7 @@ int main()
 {
     shablon_stack_t<int>* sh_stack_test = SH_STACK_INIT(int, 10); 
     // sh_stack_test = NULL;
-    uint32_t byte_flag = 1;
+    uint32_t byte_flag = 4;
     SH_STACK_PUSH(1, sh_stack_test);
     // SH_STACK_DUMP(massive_of_errors, sh_stack_test, 1);
     SH_STACK_PUSH(2, sh_stack_test);

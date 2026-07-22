@@ -52,7 +52,8 @@ struct shablon_stack_t
 #define POISON             0xD1B11
 #define LEFT_STRUCT_CANAR  1488
 #define RIGHT_STRUCT_CANAR 322
-
+#define INDEX_OF_LEFT_CANAR  0
+#define INDEX_OF_RIGHT_CANAR (sh_stack->capacity_of_sh_stack + 1)
 
 #define SH_STACK_ERROR_LIST(X)             \
     X(NOT_ERROR)                           \
@@ -70,6 +71,7 @@ struct shablon_stack_t
     X(HASH_CHANGE_ERROR)                   \
     X(DUMP_FILE_OPEN_ERROR)                \
     X(PIZDEC)                              \
+    X(COUNT_OF_ERRORS)
 
 typedef enum
 {
@@ -78,25 +80,13 @@ typedef enum
     #undef MAKE_ENUM
 } sh_stack_error_t;
 
-
-#define NAME_OF_ERROR(err) #err
-
-static const char* ShStackErrorNames[] = 
-{
-    "NOT_ERROR",
-    "SH_STACK_NULL_ERROR",
-    "SH_STACK_MASSIVE_NULL_ERROR",
-    "SH_STACK_SIZE_LESS_ZERO_ERROR",
-    "SH_STACK_SIZE_LARGER_CAPACITY_ERROR",
-    "SIZE_OF_ELEMENTS_ERROR",
-    "LEFT_CANAR_ERROR",
-    "RIGHT_CANAR_ERROR",
-    "POISON_ERROR",
-    "LEFT_STRUCT_CANAR_ERROR",
-    "RIGHT_STRUCT_CANAR_ERROR",
-    "DUMP_FILE_OPEN_ERROR"
+#define STRING_DEF(name) #name,
+static const char* ShStackErrorNames[] = {
+    SH_STACK_ERROR_LIST(STRING_DEF)
 };
 
+#define FIRST_ERROR 1
+#define NUMBER_OF_POSSIBLE_ERRORS COUNT_OF_ERRORS
 
 template <typename elem_stk_T> 
 shablon_stack_t<elem_stk_T>* sh_stack_init(size_t capacity, int line, const char* file, const char* func);

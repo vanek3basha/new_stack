@@ -115,6 +115,8 @@ stack_flag_of_err_t sh_stack_push(elem_stk_T value, shablon_stack_t<elem_stk_T>*
     if(sh_stack->size_of_sh_stack + 1 >= sh_stack->capacity_of_sh_stack)
     {
         SH_STACK_REALLOC(sh_stack, sh_stack->capacity_of_sh_stack * 2 + 1);
+        //ну я пытался какое то логичное название для "* 2 + 1" придумать, но это просто 
+        // рандом функция для реаллокации
         if(sh_stack == NULL)
         {
             perror("SH_STACK == NULL\n");

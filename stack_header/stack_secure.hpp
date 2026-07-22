@@ -1,8 +1,6 @@
 #ifndef _SH_STACK_SECURE__HPP_
 #define _SH_STACK_SECURE__HPP_
 
-#define INDEX_OF_LEFT_CANAR  0
-#define INDEX_OF_RIGHT_CANAR (sh_stack->capacity_of_sh_stack + 1)
 template <typename elem_stk_T>
 sh_stack_error_t canareyka_create(shablon_stack_t<elem_stk_T>* sh_stack)
 {
@@ -11,12 +9,10 @@ sh_stack_error_t canareyka_create(shablon_stack_t<elem_stk_T>* sh_stack)
         perror("WARNING SIZE OF YOUR TYPE BIGGER THEN 8 BYTES\n");
         return SIZE_OF_ELEMENTS_ERROR;
     }
-    canareyka_const_t left_canareyka  = LEFT_CANAREYKA;
-    canareyka_const_t right_canareyka = RIGHT_CANAREYKA;
-    canareyka_const_t* ptr_of_left_canareyka  = (canareyka_const_t*)&left_canareyka;
-    canareyka_const_t* ptr_of_right_canareyka = (canareyka_const_t*)&right_canareyka;
-    memcpy(sh_stack->sh_stack_massive + INDEX_OF_LEFT_CANAR, ptr_of_left_canareyka, sizeof(elem_stk_T));
-    memcpy(sh_stack->sh_stack_massive + INDEX_OF_RIGHT_CANAR, ptr_of_right_canareyka, sizeof(elem_stk_T));
+    
+    sh_stack->sh_stack_massive[INDEX_OF_LEFT_CANAR]  = (elem_stk_T)LEFT_CANAREYKA;
+    sh_stack->sh_stack_massive[INDEX_OF_RIGHT_CANAR] = (elem_stk_T)RIGHT_CANAREYKA;
+
     return NOT_ERROR;
 }
 

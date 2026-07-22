@@ -63,9 +63,9 @@ sh_stack_error_t sh_stack_dump(stack_flag_of_err_t byte_flag, shablon_stack_t<el
     {
         fprintf(dump_file, "\n------------------------ELEMENTS OF STACK-----------------------\n");
 
-        for(size_t i = 0; i < sh_stack->capacity_of_sh_stack + 2; i++)
+        for(size_t i = 0; i <= INDEX_OF_RIGHT_CANAR; i++)
         {
-            uint8_t* byte_ptr = reinterpret_cast<uint8_t*>(&sh_stack->sh_stack_massive[i]);
+            uint8_t* byte_ptr = (uint8_t*)(&sh_stack->sh_stack_massive[i]);
             fprintf(dump_file, "%2lu ELEMENT: ", (i + 1));
             for (size_t j = 0; j < sizeof(elem_stk_T); j++) 
             {
@@ -80,13 +80,13 @@ sh_stack_error_t sh_stack_dump(stack_flag_of_err_t byte_flag, shablon_stack_t<el
     if(byte_flag != 0)
     {
         stack_flag_of_err_t mask = 0;
-        for(size_t i = 1; i < 31; i++)
+        for(size_t i = FIRST_ERROR; i < NUMBER_OF_POSSIBLE_ERRORS; i++)
         {
             mask = 1 << i;
             if((byte_flag & mask) != 0)
             {
             count_of_errors += 1;
-            fprintf(dump_file, "ERROR %lu: %s\n", count_of_errors, NAME_OF_ERROR());
+            fprintf(dump_file, "ERROR %lu: %s\n", count_of_errors, ShStackErrorNames[i]);
             }
         }
     }

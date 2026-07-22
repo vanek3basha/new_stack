@@ -40,3 +40,45 @@ ERROR 1: SH_STACK_MASSIVE_NULL_ERROR
 
 ----------------------------------------------------------------
 -------------------------STACK DUMP END-------------------------
+---------------------------STACK DUMP---------------------------
+IN FILE:shablon_stack.cpp   
+LINE:12   
+FUNC:int main() 
+^
+|
+
+----------------------------------------------------------------
+                      TYPE OF STACK: int
+
+----------------------------------------------------------------
+              ADDRESS OF SH_STACK STRUCT: 0x558deb2942b0
+           ADDRESS OF SH_STACK_MASSIVE STRUCT: 0x558deb294ef0
+
+----------------------------------------------------------------
+LEFT  STRUCT CANAREYKA: 1488
+RIGHT STRUCT CANAREYKA: 322
+                        SIZE OF STACK: 2
+                      CAPACITY OF STACK: 10
+
+------------------------ELEMENTS OF STACK-----------------------
+ 1 ELEMENT: 0x10 0xBA 0x0E 0x00 
+ 2 ELEMENT: 0x01 0x00 0x00 0x00 
+ 3 ELEMENT: 0x02 0x00 0x00 0x00 
+ 4 ELEMENT: 0x11 0x1B 0x0D 0x00 
+ 5 ELEMENT: 0x11 0x1B 0x0D 0x00 
+ 6 ELEMENT: 0x11 0x1B 0x0D 0x00 
+ 7 ELEMENT: 0x11 0x1B 0x0D 0x00 
+ 8 ELEMENT: 0x11 0x1B 0x0D 0x00 
+ 9 ELEMENT: 0x11 0x1B 0x0D 0x00 
+10 ELEMENT: 0x11 0x1B 0x0D 0x00 
+11 ELEMENT: 0x11 0x1B 0x0D 0x00 
+12 ELEMENT: 0xA1 0xC4 0xBA 0xBA 
+
+--------------------------LIST OF ERROR-------------------------
+ERROR 1: SH_STACK_MASSIVE_NULL_ERROR
+
+----------------------------------------------------------------
+                        COUNT OF ERRORS: 1
+
+----------------------------------------------------------------
+-------------------------STACK DUMP END-------------------------

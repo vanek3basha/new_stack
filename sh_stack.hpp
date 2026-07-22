@@ -47,11 +47,12 @@ struct shablon_stack_t
 
 // 0xB16B00B5
 // 0xBADA55
-#define LEFT_CANAREYKA     0xEBA10
-#define RIGHT_CANAREYKA    0xBABAC4A1
-#define POISON             0xD1B11
-#define LEFT_STRUCT_CANAR  1488
-#define RIGHT_STRUCT_CANAR 322
+#define MAX_SIZE_OF_ELEM     8
+#define LEFT_CANAREYKA       0xEBA10
+#define RIGHT_CANAREYKA      0xBABAC4A1
+#define POISON               0xD1B11
+#define LEFT_STRUCT_CANAR    1488
+#define RIGHT_STRUCT_CANAR   322
 #define INDEX_OF_LEFT_CANAR  0
 #define INDEX_OF_RIGHT_CANAR (sh_stack->capacity_of_sh_stack + 1)
 

@@ -4,7 +4,7 @@
 template <typename elem_stk_T>
 sh_stack_error_t canareyka_create(shablon_stack_t<elem_stk_T>* sh_stack)
 {
-    if(sizeof(elem_stk_T) > 8)
+    if(sizeof(elem_stk_T) > MAX_SIZE_OF_ELEM)
     {
         perror("WARNING SIZE OF YOUR TYPE BIGGER THEN 8 BYTES\n");
         return SIZE_OF_ELEMENTS_ERROR;
@@ -19,18 +19,15 @@ sh_stack_error_t canareyka_create(shablon_stack_t<elem_stk_T>* sh_stack)
 template <typename elem_stk_T>
 sh_stack_error_t poison_create(shablon_stack_t<elem_stk_T>* sh_stack)
 {   
-    if(sizeof(elem_stk_T) > 8)
+    if(sizeof(elem_stk_T) > MAX_SIZE_OF_ELEM)
     {
         perror("WARNING SIZE OF YOUR TYPE BIGGER THEN 8 BYTES\n");
         return SIZE_OF_ELEMENTS_ERROR;
     }
 
-    poison_const_t poison = POISON;
-    poison_const_t* ptr_of_poison = (poison_const_t*)&poison;
-
     for(size_t i = sh_stack->size_of_sh_stack; i < sh_stack->capacity_of_sh_stack; i++)
     {
-        memcpy(sh_stack->sh_stack_massive + i + 1, ptr_of_poison, sizeof(elem_stk_T));
+        sh_stack->sh_stack_massive[i + 1] = (elem_stk_T)POISON;
     }
 
     return NOT_ERROR;
